@@ -86,8 +86,11 @@ def build_index(path: Path, max_chars: int = 6000) -> dict:
     chapters: list[tuple[int, str]] = [(0, "全文开头")]
     offset = 0
     for line in raw.splitlines(keepends=True):
-        if HEADING.fullmatch(line.strip()) and offset > chapters[-1][0]:
-            chapters.append((offset, line.strip()))
+        if HEADING.fullmatch(line.strip()):
+            if offset == 0:
+                chapters[0] = (0, line.strip())
+            elif offset > chapters[-1][0]:
+                chapters.append((offset, line.strip()))
         offset += len(line)
     chapters.append((len(raw), "END"))
     chunks: list[dict] = []
