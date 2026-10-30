@@ -19,6 +19,10 @@ def main() -> None:
     extract.add_argument("index", type=Path)
     extract.add_argument("--out", type=Path, required=True)
     extract.add_argument("--max-chunks", type=int, default=3)
+    pick = sub.add_parser("pick-story", help="Select one story from extract-stories output")
+    pick.add_argument("candidates", type=Path)
+    pick.add_argument("--number", type=int, default=1, help="1-based story number")
+    pick.add_argument("--out", type=Path, required=True)
     episode = sub.add_parser("make-episode", help="Write six-shot content package")
     episode.add_argument("story", type=Path)
     episode.add_argument("--out", type=Path, required=True)
@@ -38,6 +42,14 @@ def main() -> None:
         summary = {"stories": len(result["stories"]),
                    "rejected": result["rejected_candidates"],
                    "chunks_examined": result["chunks_examined"]}
+    elif args.command == "pick-story":
+        candidates = json.loads(args.candidates.read_text(encoding="utf-8")).get("stories", [])
+        if args.number < 1 or args.number > len(candidates):
+            parser.error("Story number is out of range")
+        story = candidates[args.number - 1]
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(json.dumps(story, ensure_ascii=False, indent=2), encoding="utf-8")
+        summary = {"selected": args.number, "title": story["title"], "output": str(args.out)}
     elif args.command == "make-episode":
         result = make_episode(args.story, args.out)
         summary = {"shots": len(result["shots"]), "seconds": result["total_seconds"]}
