@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "book-story-factory"
+version = "0.1.0"
+description = "Source-traceable book stories to illustrated short videos"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+dependencies = []
+
+[project.optional-dependencies]
+pdf = ["pypdf>=5"]
+
+[project.scripts]
+book-story = "book_story_factory.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
