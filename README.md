@@ -32,6 +32,8 @@ export OPENAI_COMPAT_API_KEY='YOUR_KEY'
 export OPENAI_COMPAT_MODEL='YOUR_MODEL'
 export OPENAI_COMPAT_BASE_URL='https://your-provider.example/v1'
 book-story extract-stories outputs/my-book/index.json --out outputs/my-book/stories.json --max-chunks 3
+book-story pick-story outputs/my-book/stories.json --number 1 --out outputs/my-book/story-001.json
+book-story make-episode outputs/my-book/story-001.json --out outputs/episode-001
 ~~~
 
 准备好 outputs/demo/images/01.png ~ 06.png（或 JPG / WEBP）之后：
